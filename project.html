@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Marker animations with <code>setTimeout()</code></title>
+    <style>
+	/* style settings for Google map */
+	#map-canvas
+	{
+		width : 800px; 	/* map width */
+		height: 800px;	/* map height */
+		position: absolute;
+		left:500px;
+		top: 50px;
+	}
+		</style>
+	<style>
+	/* style settings for Dropdown List */
+	#dropdownuser
+	{
+		
+		position: absolute;
+		left: 150px;
+		top: 10px;
+		display: inline-block;
+
+	}
+	</style>
+	<style>
+	/* style settings for button */
+	#panel {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        margin-left: -180px;
+        z-index: 5;
+        background-color: blue;
+        padding: 5px;
+        border: 1px solid #999;
+      }
+	</style>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+    <script>
+var dhaka = new google.maps.LatLng(23.810332, 90.412518);
+
+var schools = [
+  new google.maps.LatLng(23.759018, 90.411929),
+  new google.maps.LatLng(23.686936, 90.426847),
+  new google.maps.LatLng(23.746465, 90.396013),
+  new google.maps.LatLng(23.692909, 90.392106),
+  new google.maps.LatLng(23.812983, 90.422188)
+];
+
+var restaurants = [
+  new google.maps.LatLng(23.759055, 90.411978),
+  new google.maps.LatLng(23.812909, 90.422106),
+  new google.maps.LatLng(23.686990, 90.426899),
+  new google.maps.LatLng(23.822508, 90.422696),
+  new google.maps.LatLng(23.746412, 90.396096)
+];
+
+var hospitals = [
+  new google.maps.LatLng(23.759089, 90.411967),
+  new google.maps.LatLng(23.686978, 90.426800),
+  new google.maps.LatLng(23.746411, 90.396098),
+  new google.maps.LatLng(23.822909, 90.428106),
+  new google.maps.LatLng(23.662807, 90.402244)
+];
+
+var banks = [
+  new google.maps.LatLng(23.759287, 90.411619),
+  new google.maps.LatLng(23.812909, 90.422106),
+  new google.maps.LatLng(23.852862, 90.416799),
+  new google.maps.LatLng(23.812909, 90.422106),
+  new google.maps.LatLng(23.686789, 90.426990)
+];
+
+var markers = [];
+var iterator = 0;
+
+var map;
+var service;
+
+function handleSearchResults(results, status){
+		console.log(results);
+		for (var j = 0; j < results.length; j++){
+		var markers = new google.maps.Marker({
+    position: results[j].geometry.location,
+	map: map,
+    icon: results[j].icon
+	});
+	}
+}
+function performSearch(){
+		var request = {
+    location: dhaka,
+	name: "Gulshan",
+    radius: 500
+	};
+  
+		service.nearbySearch(request, handleSearchResults);
+}
+
+function initialize() {
+  var mapOptions = {
+    zoom: 12,
+    center: dhaka
+  };
+
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+          mapOptions);
+		  
+		  service = new google.maps.places.PlacesService(map);
+		  performSearch();
+}
+
+function addMarker() {
+	type();
+}
+function type() {
+
+	if (document.dropdowntype.typeActivities.value == "school"){
+        for (var i = 0; i < schools.length; i++){
+  markers.push(new google.maps.Marker({
+    position: schools[iterator],
+	map: map,
+    draggable: false
+  }));
+  iterator++;
+	}
+}
+
+	else if (document.dropdowntype.typeActivities.value == "restaurant"){
+        for (var i = 0; i < restaurants.length; i++){
+  markers.push(new google.maps.Marker({
+    position: restaurants[iterator],
+	map: map,
+    draggable: false
+  }));
+  iterator++;
+	}
+}
+
+	else if (document.dropdowntype.typeActivities.value == "hospital"){
+        for (var i = 0; i < hospitals.length; i++){
+  markers.push(new google.maps.Marker({
+    position: hospitals[iterator],
+	map: map,
+    draggable: false
+  }));
+  iterator++;
+	}
+}
+    
+     else{
+        for (var i = 0; i < banks.length; i++){
+  markers.push(new google.maps.Marker({
+    position: banks[iterator],
+    map: map,
+    draggable: false
+  }));
+  iterator++;
+  	}
+  }	
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+	
+  </head>
+  <body>
+    <!-- For Google map-->
+	<div id='map-canvas' >
+	</div>
+	<div id="panel" style="margin-left: -52px">
+	    <!-- For button purpose -->
+      <button id="drop" onclick="addMarker()">Drop Markers</button>
+	  <button id="fresh" onclick="window.location.reload()">Refresh Map</button>
+     </div>
+	 	<form name="dropdownuser">
+			    <!-- Display Dropdown List -->
+	User
+	<select name="userActivities">
+		<option value="tom">Tom</option>
+		<option value="jane">Jane</option>
+		<option value="dave">Dave</option>
+		<option value="sarah">Sarah</option>
+		<option value="john">John</option>
+	</select>
+</form>
+<form name="dropdowntype">
+			    <!-- Display Dropdown List -->
+	Type
+	<select name="typeActivities">
+		<option value="school" name="school">School</option>
+		<option value="restaurant" name="restaurant">Restaurant</option>
+		<option value="hospital" name="hospital">Hospital</option>
+		<option value="bank" name="bank">Bank</option>
+	</select>
+<form>
+  </body>
+</html>
